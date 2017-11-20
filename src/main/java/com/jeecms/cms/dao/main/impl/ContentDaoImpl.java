@@ -19,6 +19,7 @@ import static com.jeecms.cms.action.directive.abs.AbstractContentDirective.PARAM
 import static com.jeecms.cms.action.directive.abs.AbstractContentDirective.PARAM_ATTR_GTE;
 import static com.jeecms.cms.action.directive.abs.AbstractContentDirective.PARAM_ATTR_LT;
 import static com.jeecms.cms.action.directive.abs.AbstractContentDirective.PARAM_ATTR_LTE;
+import static org.apache.shiro.web.filter.mgt.DefaultFilter.user;
 
 
 import java.util.Date;
@@ -27,7 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jeecms.cms.web.CmsThreadVariable;
+import com.jeecms.core.entity.CmsUser;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -480,7 +485,8 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 			f.setMaxResults(count);
 		}
 		f.setCacheable(true);
-		return find(f);
+		List<Content> list=find(f);
+		return    list;
 	}
 
 	public Pagination getPageByChannelPathsForTag(String[] paths,
@@ -595,10 +601,17 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 			Boolean titleImg, Boolean recommend, String title,Map<String,String[]>attr,int orderBy,
 			int option) {
 		Finder f = Finder.create();
+		CmsUser user = CmsThreadVariable.getUser();
+		Integer viewGroupId=null;
+		if(user!=null){
+			if(user.getGroup().getId()!=null){
+				viewGroupId=user.getGroup().getId();
+			}
+		}
 		int len = channelIds.length;
 		// 如果多个栏目
 		if (option == 0 || len > 1) {
-			f.append("select  bean from Content bean ");
+			/*f.append("select  bean from Content bean ");
 			f.append(" join bean.contentExt as ext");
 			if (len == 1) {
 				f.append(" where bean.channel.id=:channelId ");
@@ -606,23 +619,48 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 			} else {
 				f.append(" where bean.channel.id in (:channelIds)  ");
 				f.setParamList("channelIds", channelIds);
+			}*/
+			f.append("select  bean from Content bean left join bean.viewGroups as group ");
+			f.append(" join bean.contentExt as ext where 1=1 ");
+			if(viewGroupId!=null){
+				f.append(" and group.id=:viewGroupId");
+				f.setParam("viewGroupId",viewGroupId);
+
 			}
+			if (len == 1) {
+				f.append(" and bean.channel.id=:channelId ");
+				f.setParam("channelId", channelIds[0]);
+			} else {
+				f.append(" and bean.channel.id in (:channelIds)  ");
+				f.setParamList("channelIds", channelIds);
+			}
+
 		} else if (option == 1) {
 			// 包含子栏目
-			f.append("select  bean from Content bean");
+			f.append("select  bean from Content bean left join bean.viewGroups as group");
 			f.append(" join bean.contentExt as ext");
 			f.append(" join bean.channel node,Channel parent");
 			f.append(" where node.lft between parent.lft and parent.rgt");
 			f.append(" and bean.site.id=parent.site.id");
 			f.append(" and parent.id=:channelId");
 			f.setParam("channelId", channelIds[0]);
+			if(viewGroupId!=null){
+				f.append(" and group.id=:viewGroupId");
+				f.setParam("viewGroupId",viewGroupId);
+
+			}
 		} else if (option == 2) {
 			// 包含副栏目
-			f.append("select  bean from Content bean");
+			f.append("select  bean from Content bean left join bean.viewGroups as group");
 			f.append(" join bean.contentExt as ext");
 			f.append(" join bean.channels as channel");
 			f.append(" where channel.id=:channelId");
 			f.setParam("channelId", channelIds[0]);
+			if(viewGroupId!=null){
+				f.append(" and group.id=:viewGroupId");
+				f.setParam("viewGroupId",viewGroupId);
+
+			}
 		} else {
 			throw new RuntimeException("option value must be 0 or 1 or 2.");
 		}

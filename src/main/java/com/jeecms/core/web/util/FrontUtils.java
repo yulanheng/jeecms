@@ -343,6 +343,7 @@ public class FrontUtils {
 		map.put(RES_TPL, res.substring(1));
 		map.put(MOBILE_RES_TPL, mobileRes.substring(1));
 		map.put(LOCATION, location);
+
 	}
 
 	public static void putLocation(Map<String, Object> map, String location) {

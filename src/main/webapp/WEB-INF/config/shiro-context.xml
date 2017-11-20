@@ -16,11 +16,13 @@
 				<entry key="logout" value-ref="logoutFilter" />
 			</util:map>
 		</property>
-		<!--anon匿名 authc登录认证  user用户已登录 logout退出filter-->
+		<!--anon匿名 authc登录认证  user用户已登录 logout退出filter
+		*.jspx = anon
+				*.jhtml = anon
+		-->
 		<property name="filterChainDefinitions">
 			<value>
-				*.jspx = anon
-				*.jhtml = anon
+
 				/member/forgot_password.jspx = anon
 				/member/password_reset.jspx = anon
 				/member/jobapply.jspx = anon
@@ -30,6 +32,8 @@
 				/jeeadmin/jeecms/login.do = authc
 				/jeeadmin/jeecms/logout.do = logout
 				/jeeadmin/jeecms/** =user
+				*.jspx = authc
+				*.jhtml = authc
 			</value>
 		</property>
 	</bean>

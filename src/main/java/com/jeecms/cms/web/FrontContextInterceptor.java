@@ -1,19 +1,5 @@
 package com.jeecms.cms.web;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import com.jeecms.common.util.CheckMobile;
 import com.jeecms.common.web.CookieUtils;
 import com.jeecms.common.web.session.SessionProvider;
@@ -24,6 +10,18 @@ import com.jeecms.core.manager.CmsConfigMng;
 import com.jeecms.core.manager.CmsSiteMng;
 import com.jeecms.core.manager.CmsUserMng;
 import com.jeecms.core.web.util.CmsUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * CMS上下文信息拦截器
@@ -92,6 +90,7 @@ public class FrontContextInterceptor extends HandlerInterceptorAdapter {
 		if (subject.isAuthenticated()|| subject.isRemembered()) {
 			String username =  (String) subject.getPrincipal();
 			user= cmsUserMng.findByUsername(username);
+			System.out.println(user.getGroup().getName());
 			CmsUtils.setUser(request, user);
 			// Site加入线程变量
 			CmsThreadVariable.setUser(user);
