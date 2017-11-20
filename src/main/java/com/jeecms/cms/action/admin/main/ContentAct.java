@@ -1,18 +1,31 @@
 package com.jeecms.cms.action.admin.main;
 
-import static com.jeecms.common.page.SimplePage.cpn;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jeecms.cms.entity.main.*;
+import com.jeecms.cms.entity.main.Content.ContentStatus;
+import com.jeecms.cms.entity.main.ContentRecord.ContentOperateType;
+import com.jeecms.cms.manager.assist.CmsConfigContentChargeMng;
+import com.jeecms.cms.manager.assist.CmsFileMng;
+import com.jeecms.cms.manager.main.*;
+import com.jeecms.cms.service.ImageSvc;
+import com.jeecms.cms.staticpage.ContentStatusChangeThread;
+import com.jeecms.cms.staticpage.exception.*;
+import com.jeecms.common.image.ImageUtils;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.common.upload.FileRepository;
+import com.jeecms.common.util.StrUtils;
+import com.jeecms.common.web.CookieUtils;
+import com.jeecms.common.web.RequestUtils;
+import com.jeecms.common.web.ResponseUtils;
+import com.jeecms.common.web.springmvc.MessageResolver;
+import com.jeecms.core.entity.CmsGroup;
+import com.jeecms.core.entity.CmsSite;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.entity.Ftp;
+import com.jeecms.core.manager.*;
+import com.jeecms.core.tpl.TplManager;
+import com.jeecms.core.web.WebErrors;
+import com.jeecms.core.web.util.CmsUtils;
+import com.jeecms.core.web.util.CoreUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,54 +42,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.jeecms.cms.entity.main.Channel;
-import com.jeecms.cms.entity.main.CmsModel;
-import com.jeecms.cms.entity.main.CmsModelItem;
-import com.jeecms.cms.entity.main.CmsTopic;
-import com.jeecms.cms.entity.main.Content;
-import com.jeecms.cms.entity.main.ContentCheck;
-import com.jeecms.cms.entity.main.ContentExt;
-import com.jeecms.cms.entity.main.ContentRecord.ContentOperateType;
-import com.jeecms.cms.entity.main.ContentTxt;
-import com.jeecms.cms.entity.main.ContentType;
-import com.jeecms.cms.entity.main.Content.ContentStatus;
-import com.jeecms.cms.manager.assist.CmsConfigContentChargeMng;
-import com.jeecms.cms.manager.assist.CmsFileMng;
-import com.jeecms.cms.manager.main.ChannelMng;
-import com.jeecms.cms.manager.main.CmsModelItemMng;
-import com.jeecms.cms.manager.main.CmsModelMng;
-import com.jeecms.cms.manager.main.CmsTopicMng;
-import com.jeecms.cms.manager.main.ContentMng;
-import com.jeecms.cms.manager.main.ContentTypeMng;
-import com.jeecms.cms.service.ImageSvc;
-import com.jeecms.cms.staticpage.ContentStatusChangeThread;
-import com.jeecms.cms.staticpage.exception.ContentNotCheckedException;
-import com.jeecms.cms.staticpage.exception.GeneratedZeroStaticPageException;
-import com.jeecms.cms.staticpage.exception.StaticPageNotOpenException;
-import com.jeecms.cms.staticpage.exception.TemplateNotFoundException;
-import com.jeecms.cms.staticpage.exception.TemplateParseException;
-import com.jeecms.common.image.ImageUtils;
-import com.jeecms.common.page.Pagination;
-import com.jeecms.common.upload.FileRepository;
-import com.jeecms.common.util.StrUtils;
-import com.jeecms.common.web.CookieUtils;
-import com.jeecms.common.web.RequestUtils;
-import com.jeecms.common.web.ResponseUtils;
-import com.jeecms.common.web.springmvc.MessageResolver;
-import com.jeecms.core.entity.CmsGroup;
-import com.jeecms.core.entity.CmsSite;
-import com.jeecms.core.entity.CmsUser;
-import com.jeecms.core.entity.Ftp;
-import com.jeecms.core.manager.CmsConfigMng;
-import com.jeecms.core.manager.CmsGroupMng;
-import com.jeecms.core.manager.CmsLogMng;
-import com.jeecms.core.manager.CmsSiteMng;
-import com.jeecms.core.manager.CmsUserMng;
-import com.jeecms.core.manager.DbFileMng;
-import com.jeecms.core.tpl.TplManager;
-import com.jeecms.core.web.WebErrors;
-import com.jeecms.core.web.util.CmsUtils;
-import com.jeecms.core.web.util.CoreUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
+
+import static com.jeecms.common.page.SimplePage.cpn;
 
 @Controller
 public class ContentAct{
@@ -539,6 +510,14 @@ public class ContentAct{
 				.getMessage(request, "content.tagStr.split"));
 		if(txt!=null&&copyimg!=null&&copyimg){
 			txt=copyContentTxtImg(txt, site);
+		}
+		if(viewGroupIds==null||viewGroupIds.length==0){
+			List<CmsGroup> groupList = cmsGroupMng.getList();
+			viewGroupIds=new Integer[groupList.size()];
+			int i=0;
+			for(CmsGroup group:groupList){
+				viewGroupIds[i++]=group.getId();
+			}
 		}
 		bean = manager.save(bean, ext, txt,channelIds, topicIds, viewGroupIds,
 				tagArr, attachmentPaths, attachmentNames, attachmentFilenames,
