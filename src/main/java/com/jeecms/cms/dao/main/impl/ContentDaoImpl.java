@@ -22,11 +22,7 @@ import static com.jeecms.cms.action.directive.abs.AbstractContentDirective.PARAM
 import static org.apache.shiro.web.filter.mgt.DefaultFilter.user;
 
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.jeecms.cms.web.CmsThreadVariable;
 import com.jeecms.core.entity.CmsUser;
@@ -486,6 +482,8 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 		}
 		f.setCacheable(true);
 		List<Content> list=find(f);
+		Set set=new LinkedHashSet<>(list);
+		list=new ArrayList<>(set);
 		return    list;
 	}
 
@@ -601,12 +599,13 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 								Boolean titleImg, Boolean recommend, String title,Map<String,String[]>attr,int orderBy,
 								int option) {
 		Finder f = Finder.create();
+		boolean superAdmin=false;
 		CmsUser user = CmsThreadVariable.getUser();
 		Integer viewGroupId=null;
 		if(user!=null){
-			Boolean superAdmin=user.isSuper();
-			if(superAdmin!=null&&superAdmin) {
-
+			Boolean admin=user.isSuper();
+			if(admin!=null&&admin) {
+			   superAdmin=admin;
 			}else{
 				if(user.getGroup().getId()!=null){
 					viewGroupId=user.getGroup().getId();
@@ -626,12 +625,19 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 				f.append(" where bean.channel.id in (:channelIds)  ");
 				f.setParamList("channelIds", channelIds);
 			}*/
-			f.append("select  bean from Content bean  join bean.viewGroups as group ");
+			f.append("select  bean from Content bean left join bean.viewGroups as group ");
 			f.append(" join bean.contentExt as ext where 1=1 ");
 			if(viewGroupId!=null){
 				f.append(" and group.id=:viewGroupId");
 				f.setParam("viewGroupId",viewGroupId);
+				f.append(" or group.id is null ");
 
+			}else{
+				if(!superAdmin){
+					f.append(" and group.id is null");
+				}else {
+					f.append(" and group.id like '%'");
+				}
 			}
 			if (len == 1) {
 				f.append(" and bean.channel.id=:channelId ");
@@ -653,6 +659,7 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 			if(viewGroupId!=null){
 				f.append(" and group.id=:viewGroupId");
 				f.setParam("viewGroupId",viewGroupId);
+				f.append(" or group.id is null ");
 
 			}
 		} else if (option == 2) {
@@ -665,6 +672,7 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 			if(viewGroupId!=null){
 				f.append(" and group.id=:viewGroupId");
 				f.setParam("viewGroupId",viewGroupId);
+				f.append(" or group.id is null ");
 
 			}
 		} else {

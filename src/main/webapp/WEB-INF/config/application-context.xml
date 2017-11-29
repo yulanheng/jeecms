@@ -60,8 +60,8 @@ default-lazy-init="true">
 		<property name="hibernateProperties">
 			<value>
 			hibernate.dialect=${hibernate.dialect}
-			hibernate.show_sql=false
-			hibernate.format_sql=false
+			hibernate.show_sql=true
+			hibernate.format_sql=true
 			hibernate.query.substitutions=true 1, false 0
 			hibernate.jdbc.batch_size=20
 			hibernate.jdbc.use_streams_for_binary=true

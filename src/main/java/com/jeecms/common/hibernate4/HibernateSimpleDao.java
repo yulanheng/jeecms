@@ -1,8 +1,7 @@
 package com.jeecms.common.hibernate4;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.jeecms.common.page.Pagination;
+import com.jeecms.common.util.MyBeanUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -17,8 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import com.jeecms.common.page.Pagination;
-import com.jeecms.common.util.MyBeanUtils;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * hibernate DAO基类
@@ -81,6 +82,8 @@ public abstract class HibernateSimpleDao {
 			query.setCacheable(true);
 		}
 		List list = query.list();
+		Set set=new LinkedHashSet<>(list);
+		list=new ArrayList<>(set);
 		p.setList(list);
 		return p;
 	}
@@ -154,8 +157,6 @@ public abstract class HibernateSimpleDao {
 	 * @param crit
 	 * @param pageNo
 	 * @param pageSize
-	 * @param projection
-	 * @param orders
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")

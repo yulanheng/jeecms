@@ -32,8 +32,8 @@
 				/jeeadmin/jeecms/login.do = authc
 				/jeeadmin/jeecms/logout.do = logout
 				/jeeadmin/jeecms/** =user
-				*.jspx = authc
-				*.jhtml = authc
+			<!--	*.jspx = authc
+				*.jhtml = authc-->
 			</value>
 		</property>
 	</bean>
