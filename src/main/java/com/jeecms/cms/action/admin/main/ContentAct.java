@@ -62,7 +62,7 @@ public class ContentAct{
 
 	/**
 	 * 栏目导航
-	 * 
+	 *
 	 * @param root
 	 * @param request
 	 * @param response
@@ -72,7 +72,7 @@ public class ContentAct{
 	@RequiresPermissions("content:v_tree")
 	@RequestMapping(value = "/content/v_tree.do")
 	public String tree(String root, HttpServletRequest request,
-			HttpServletResponse response, ModelMap model) {
+					   HttpServletResponse response, ModelMap model) {
 		log.debug("tree path={}", root);
 		boolean isRoot;
 		// jquery treeview的根请求为root=source
@@ -106,7 +106,7 @@ public class ContentAct{
 						.parseInt(root), true);
 			}
 		}
-		
+
 		model.addAttribute("list", list);
 		response.setHeader("Cache-Control", "no-cache");
 		response.setContentType("text/json;charset=UTF-8");
@@ -115,7 +115,7 @@ public class ContentAct{
 
 	/**
 	 * 副栏目树
-	 * 
+	 *
 	 * @param root
 	 * @param request
 	 * @param response
@@ -125,7 +125,7 @@ public class ContentAct{
 	@RequiresPermissions("content:v_tree_channels")
 	@RequestMapping(value = "/content/v_tree_channels.do")
 	public String treeChannels(String root, HttpServletRequest request,
-			HttpServletResponse response, ModelMap model) {
+							   HttpServletResponse response, ModelMap model) {
 		tree(root, request, response, model);
 		return "content/tree_channels";
 	}
@@ -133,9 +133,9 @@ public class ContentAct{
 	@RequiresPermissions("content:v_list")
 	@RequestMapping("/content/v_list.do")
 	public String list(Integer queryShare,String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+					   Boolean queryTopLevel, Boolean queryRecommend,
+					   Integer queryOrderBy, Integer cid, Integer pageNo,
+					   HttpServletRequest request, ModelMap model) {
 		long time = System.currentTimeMillis();
 		String queryTitle = RequestUtils.getQueryParam(request, "queryTitle");
 		queryTitle = StringUtils.trim(queryTitle);
@@ -200,13 +200,13 @@ public class ContentAct{
 		time = System.currentTimeMillis() - time;
 		return "content/list";
 	}
-	
+
 	@RequiresPermissions("content:v_list")
 	@RequestMapping("/content/getPage.do")
 	public void getPage(Integer queryShare,String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer cid, Integer pageNo,
-			HttpServletRequest request, HttpServletResponse response,ModelMap model) {
+						Boolean queryTopLevel, Boolean queryRecommend,
+						Integer queryOrderBy, Integer cid, Integer pageNo,
+						HttpServletRequest request, HttpServletResponse response,ModelMap model) {
 		long time = System.currentTimeMillis();
 		String queryTitle = RequestUtils.getQueryParam(request, "queryTitle");
 		queryTitle = StringUtils.trim(queryTitle);
@@ -248,7 +248,7 @@ public class ContentAct{
 		Integer siteId = site.getId();
 		CmsUser user = CmsUtils.getUser(request);
 		Integer userId = user.getId();
-		Pagination p = manager.getPageCountByRight(queryShare,queryTitle, 
+		Pagination p = manager.getPageCountByRight(queryShare,queryTitle,
 				queryTypeId,user.getId(),queryInputUserId, queryTopLevel,
 				queryRecommend, status, user.getCheckStep(siteId), siteId, cid, userId,
 				queryOrderBy, cpn(pageNo), CookieUtils.getPageSize(request));
@@ -359,9 +359,9 @@ public class ContentAct{
 	@RequiresPermissions("content:v_view")
 	@RequestMapping("/content/v_view.do")
 	public String view(String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer pageNo, Integer cid, Integer id,
-			HttpServletRequest request, ModelMap model) {
+					   Boolean queryTopLevel, Boolean queryRecommend,
+					   Integer queryOrderBy, Integer pageNo, Integer cid, Integer id,
+					   HttpServletRequest request, ModelMap model) {
 		CmsSite site = CmsUtils.getSite(request);
 		CmsUser user = CmsUtils.getUser(request);
 		byte currStep = user.getCheckStep(site.getId());
@@ -385,9 +385,9 @@ public class ContentAct{
 	@RequiresPermissions("content:v_edit")
 	@RequestMapping("/content/v_edit.do")
 	public String edit(String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer pageNo, Integer cid, Integer id,
-			HttpServletRequest request, ModelMap model) {
+					   Boolean queryTopLevel, Boolean queryRecommend,
+					   Integer queryOrderBy, Integer pageNo, Integer cid, Integer id,
+					   HttpServletRequest request, ModelMap model) {
 		WebErrors errors = validateEdit(id, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -482,15 +482,15 @@ public class ContentAct{
 	@RequiresPermissions("content:o_save")
 	@RequestMapping("/content/o_save.do")
 	public String save(Content bean, ContentExt ext, ContentTxt txt,
-			Boolean copyimg,Integer[] channelIds, Integer[] topicIds, 
-			Integer[] viewGroupIds,
-			String[] attachmentPaths, String[] attachmentNames,
-			String[] attachmentFilenames, String[] picPaths, String[] picDescs,
-			Integer channelId, Integer typeId, String tagStr, Boolean draft,
-			Integer cid, Integer modelId,Short charge,Double chargeAmount,
-			Boolean rewardPattern,Double rewardRandomMin,
-			Double rewardRandomMax,Double[] rewardFix,
-			HttpServletRequest request,HttpServletResponse response, ModelMap model) {
+					   Boolean copyimg,Integer[] channelIds, Integer[] topicIds,
+					   Integer[] viewGroupIds,
+					   String[] attachmentPaths, String[] attachmentNames,
+					   String[] attachmentFilenames, String[] picPaths, String[] picDescs,
+					   Integer channelId, Integer typeId, String tagStr, Boolean draft,
+					   Integer cid, Integer modelId,Short charge,Double chargeAmount,
+					   Boolean rewardPattern,Double rewardRandomMin,
+					   Double rewardRandomMax,Double[] rewardFix,
+					   HttpServletRequest request,HttpServletResponse response, ModelMap model) {
 		WebErrors errors = validateSave(bean, channelId, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -511,14 +511,35 @@ public class ContentAct{
 		if(txt!=null&&copyimg!=null&&copyimg){
 			txt=copyContentTxtImg(txt, site);
 		}
+		List<CmsGroup> groupList = cmsGroupMng.getList();
+		Map<Integer,CmsGroup> cmsGroupMap=new HashMap<>();
+		for(CmsGroup group:groupList){
+			cmsGroupMap.put(group.getId(),group);
+		}
 		if(viewGroupIds==null||viewGroupIds.length==0){
-			List<CmsGroup> groupList = cmsGroupMng.getList();
 			viewGroupIds=new Integer[groupList.size()];
 			int i=0;
 			for(CmsGroup group:groupList){
 				viewGroupIds[i++]=group.getId();
 			}
+		}else {
+			Set<Integer> viewGroupIdSet=new HashSet<>();
+			for (Integer groupId:viewGroupIds){
+				viewGroupIdSet.add(groupId);
+				Integer pid=cmsGroupMap.get(groupId).getParentId();
+				while (pid!=null&&pid!=0){
+					viewGroupIdSet.add(pid);
+					pid=cmsGroupMap.get(pid).getParentId();
+				}
+			}
+			viewGroupIds=new Integer[viewGroupIdSet.size()];
+			int i=0;
+			for(Integer groupid:viewGroupIdSet){
+				viewGroupIds[i++]=groupid;
+			}
+
 		}
+
 		bean = manager.save(bean, ext, txt,channelIds, topicIds, viewGroupIds,
 				tagArr, attachmentPaths, attachmentNames, attachmentFilenames,
 				picPaths, picDescs, channelId, typeId, draft,false,
@@ -540,18 +561,18 @@ public class ContentAct{
 	@RequiresPermissions("content:o_update")
 	@RequestMapping("/content/o_update.do")
 	public String update(Integer queryShare,String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Content bean, ContentExt ext, ContentTxt txt,
-			Boolean copyimg,Integer[] channelIds, Integer[] topicIds, 
-			Integer[] viewGroupIds,String[] attachmentPaths,
-			String[] attachmentNames,String[] attachmentFilenames, String[] picPaths,String[] picDescs,
-			Integer channelId, Integer typeId, String tagStr, Boolean draft,
-			Integer cid,String[]oldattachmentPaths,String[] oldpicPaths,
-			String oldTitleImg,String oldContentImg,String oldTypeImg,
-			Short charge,Double chargeAmount,Boolean rewardPattern,Double rewardRandomMin,
-			Double rewardRandomMax,Double[] rewardFix,
-			Integer pageNo, HttpServletRequest request,
-			ModelMap model) {
+						 Boolean queryTopLevel, Boolean queryRecommend,
+						 Integer queryOrderBy, Content bean, ContentExt ext, ContentTxt txt,
+						 Boolean copyimg,Integer[] channelIds, Integer[] topicIds,
+						 Integer[] viewGroupIds,String[] attachmentPaths,
+						 String[] attachmentNames,String[] attachmentFilenames, String[] picPaths,String[] picDescs,
+						 Integer channelId, Integer typeId, String tagStr, Boolean draft,
+						 Integer cid,String[]oldattachmentPaths,String[] oldpicPaths,
+						 String oldTitleImg,String oldContentImg,String oldTypeImg,
+						 Short charge,Double chargeAmount,Boolean rewardPattern,Double rewardRandomMin,
+						 Double rewardRandomMax,Double[] rewardFix,
+						 Integer pageNo, HttpServletRequest request,
+						 ModelMap model) {
 		WebErrors errors = validateUpdate(bean.getId(), request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -591,9 +612,9 @@ public class ContentAct{
 	@RequiresPermissions("content:o_delete")
 	@RequestMapping("/content/o_delete.do")
 	public String delete(Integer queryShare,String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+						 Boolean queryTopLevel, Boolean queryRecommend,
+						 Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
+						 HttpServletRequest request, ModelMap model) {
 		CmsSite site = CmsUtils.getSite(request);
 		WebErrors errors = validateDelete(ids, request);
 		if (errors.hasErrors()) {
@@ -632,13 +653,13 @@ public class ContentAct{
 		return list(queryShare,queryStatus, queryTypeId, queryTopLevel, queryRecommend,
 				queryOrderBy, cid, pageNo, request, model);
 	}
-	
+
 	@RequiresPermissions("content:o_check")
 	@RequestMapping("/content/o_check.do")
 	public String check(Integer queryShare,String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+						Boolean queryTopLevel, Boolean queryRecommend,
+						Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
+						HttpServletRequest request, ModelMap model) {
 		WebErrors errors = validateCheck(ids, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -658,11 +679,11 @@ public class ContentAct{
 		return list(queryShare,queryStatus, queryTypeId, queryTopLevel, queryRecommend,
 				queryOrderBy, cid, pageNo, request, model);
 	}
-	
+
 	@RequiresPermissions("content:o_check")
 	@RequestMapping("/content/o_ajax_check.do")
 	public void ajaxCheck(Integer[] ids, HttpServletRequest request, HttpServletResponse response,
-			ModelMap model) throws JSONException {
+						  ModelMap model) throws JSONException {
 		WebErrors errors = validateCheck(ids, request);
 		JSONObject json=new JSONObject();
 		if (errors.hasErrors()) {
@@ -688,9 +709,9 @@ public class ContentAct{
 	@RequiresPermissions("content:o_static")
 	@RequestMapping("/content/o_static.do")
 	public String contentStatic(Integer queryShare,String queryStatus,
-			Integer queryTypeId,Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+								Integer queryTypeId,Boolean queryTopLevel, Boolean queryRecommend,
+								Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
+								HttpServletRequest request, ModelMap model) {
 		WebErrors errors = validateStatic(ids, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -725,10 +746,10 @@ public class ContentAct{
 	@RequiresPermissions("content:o_reject")
 	@RequestMapping("/content/o_reject.do")
 	public String reject(Integer queryShare,String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer[] ids, Integer cid, Byte rejectStep,
-			String rejectOpinion, Integer pageNo, HttpServletRequest request,
-			ModelMap model) {
+						 Boolean queryTopLevel, Boolean queryRecommend,
+						 Integer queryOrderBy, Integer[] ids, Integer cid, Byte rejectStep,
+						 String rejectOpinion, Integer pageNo, HttpServletRequest request,
+						 ModelMap model) {
 		WebErrors errors = validateReject(ids, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -748,13 +769,13 @@ public class ContentAct{
 		return list(queryShare,queryStatus, queryTypeId, queryTopLevel, queryRecommend,
 				queryOrderBy, cid, pageNo, request, model);
 	}
-	
+
 	@RequiresPermissions("content:o_reject")
 	@RequestMapping("/content/o_ajax_reject.do")
 	public void ajaxReject(Integer[] ids, Byte rejectStep,
-			String rejectOpinion, 
-			HttpServletRequest request, HttpServletResponse response,
-			ModelMap model) throws JSONException {
+						   String rejectOpinion,
+						   HttpServletRequest request, HttpServletResponse response,
+						   ModelMap model) throws JSONException {
 		WebErrors errors = validateReject(ids, request);
 		JSONObject json=new JSONObject();
 		if (errors.hasErrors()) {
@@ -776,13 +797,13 @@ public class ContentAct{
 		json.put("success", true);
 		ResponseUtils.renderJson(response, json.toString());
 	}
-	
+
 	@RequiresPermissions("content:o_submit")
 	@RequestMapping("/content/o_submit.do")
 	public String submit(Integer queryShare,String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+						 Boolean queryTopLevel, Boolean queryRecommend,
+						 Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
+						 HttpServletRequest request, ModelMap model) {
 		WebErrors errors = validateCheck(ids, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -795,19 +816,19 @@ public class ContentAct{
 		return list(queryShare,queryStatus, queryTypeId, queryTopLevel, queryRecommend,
 				queryOrderBy, cid, pageNo, request, model);
 	}
-	
+
 	@RequiresPermissions("content:v_tree_radio")
 	@RequestMapping(value = "/content/v_tree_radio.do")
 	public String move_tree(String root, HttpServletRequest request,
-			HttpServletResponse response, ModelMap model) {
+							HttpServletResponse response, ModelMap model) {
 		tree(root, request, response, model);
 		return "content/tree_move";
 	}
-	
+
 	@RequiresPermissions("content:o_move")
 	@RequestMapping("/content/o_move.do")
-		public void move(Integer contentIds[], Integer channelId,
-				HttpServletRequest request,HttpServletResponse response) throws JSONException {
+	public void move(Integer contentIds[], Integer channelId,
+					 HttpServletRequest request,HttpServletResponse response) throws JSONException {
 		JSONObject json = new JSONObject();
 		Boolean pass = true;
 		if (contentIds != null && channelId != null) {
@@ -824,12 +845,12 @@ public class ContentAct{
 		json.put("pass", pass);
 		ResponseUtils.renderJson(response, json.toString());
 	}
-	
+
 	@RequiresPermissions("content:o_copy")
 	@RequestMapping("/content/o_copy.do")
-		public void copy(Integer contentIds[],Integer channelId,
-				Integer siteId,HttpServletRequest request,
-				HttpServletResponse response)throws JSONException {
+	public void copy(Integer contentIds[],Integer channelId,
+					 Integer siteId,HttpServletRequest request,
+					 HttpServletResponse response)throws JSONException {
 		JSONObject json = new JSONObject();
 		CmsUser user=CmsUtils.getUser(request);
 		Boolean pass = true;
@@ -854,7 +875,7 @@ public class ContentAct{
 					BeanUtils.copyProperties(bean.getContentTxt(), txtCopy);
 				}
 				manager.save(beanCopy, extCopy, txtCopy,null,
-						bean.getTopicIds(), bean.getViewGroupIds(), 
+						bean.getTopicIds(), bean.getViewGroupIds(),
 						bean.getTagArray(), bean.getAttachmentPaths(),
 						bean.getAttachmentNames(),bean.getAttachmentFileNames(),
 						bean.getPicPaths(), bean.getPicDescs(),
@@ -869,7 +890,7 @@ public class ContentAct{
 		json.put("pass", pass);
 		ResponseUtils.renderJson(response, json.toString());
 	}
-	
+
 	@RequiresPermissions("content_reuse:o_copy")
 	@RequestMapping("/content_reuse/o_copy.do")
 	public void contentCopy(Integer contentIds[],Integer channelId,Integer siteId,HttpServletRequest request,HttpServletResponse response) throws JSONException {
@@ -882,7 +903,7 @@ public class ContentAct{
 	 */
 	@RequiresPermissions("content:o_refer")
 	@RequestMapping("/content/o_refer.do")
-		public void refer(Integer contentIds[],Integer channelId,HttpServletRequest request,HttpServletResponse response) throws JSONException {
+	public void refer(Integer contentIds[],Integer channelId,HttpServletRequest request,HttpServletResponse response) throws JSONException {
 		JSONObject json = new JSONObject();
 		CmsUser user=CmsUtils.getUser(request);
 		Boolean pass = true;
@@ -899,14 +920,14 @@ public class ContentAct{
 		json.put("pass", pass);
 		ResponseUtils.renderJson(response, json.toString());
 	}
-	
+
 	@RequiresPermissions("content:o_priority")
 	@RequestMapping("/content/o_priority.do")
 	public String priority(Integer[] wids, Byte[] topLevel,Integer queryShare,
-			String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+						   String queryStatus, Integer queryTypeId,
+						   Boolean queryTopLevel, Boolean queryRecommend,
+						   Integer queryOrderBy, Integer cid, Integer pageNo,
+						   HttpServletRequest request, ModelMap model) {
 		for(int i=0;i<wids.length;i++){
 			Content c=manager.findById(wids[i]);
 			c.setTopLevel(topLevel[i]);
@@ -915,14 +936,14 @@ public class ContentAct{
 		log.info("update content priority.");
 		return list(queryShare,queryStatus, queryTypeId, queryTopLevel, queryRecommend, queryOrderBy, cid, pageNo, request, model);
 	}
-	
+
 	@RequiresPermissions("content:o_pigeonhole")
 	@RequestMapping("/content/o_pigeonhole.do")
-	public String pigeonhole(Integer[] ids, 
-			String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+	public String pigeonhole(Integer[] ids,
+							 String queryStatus, Integer queryTypeId,
+							 Boolean queryTopLevel, Boolean queryRecommend,
+							 Integer queryOrderBy, Integer cid, Integer pageNo,
+							 HttpServletRequest request, ModelMap model) {
 		for(int i=0;i<ids.length;i++){
 			Content c=manager.findById(ids[i]);
 			List<Map<String, Object>>list=manager.preChange(c);
@@ -933,14 +954,14 @@ public class ContentAct{
 		log.info("update CmsFriendlink priority.");
 		return list(null,queryStatus, queryTypeId, queryTopLevel, queryRecommend, queryOrderBy, cid, pageNo, request, model);
 	}
-	
+
 	@RequiresPermissions("content:o_unpigeonhole")
 	@RequestMapping("/content/o_unpigeonhole.do")
-	public String unpigeonhole(Integer[] ids, 
-			String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+	public String unpigeonhole(Integer[] ids,
+							   String queryStatus, Integer queryTypeId,
+							   Boolean queryTopLevel, Boolean queryRecommend,
+							   Integer queryOrderBy, Integer cid, Integer pageNo,
+							   HttpServletRequest request, ModelMap model) {
 		for(int i=0;i<ids.length;i++){
 			Content c=manager.findById(ids[i]);
 			List<Map<String, Object>>list=manager.preChange(c);
@@ -951,7 +972,7 @@ public class ContentAct{
 		log.info("update CmsFriendlink priority.");
 		return list(null,queryStatus, queryTypeId, queryTopLevel, queryRecommend, queryOrderBy, cid, pageNo, request, model);
 	}
-	
+
 	/**
 	 * 推送至专题
 	 * @param contentIds
@@ -959,7 +980,7 @@ public class ContentAct{
 	 */
 	@RequiresPermissions("content:o_send_to_topic")
 	@RequestMapping("/content/o_send_to_topic.do")
-		public void sendToTopic(Integer contentIds[],Integer[] topicIds,HttpServletRequest request,HttpServletResponse response) throws JSONException {
+	public void sendToTopic(Integer contentIds[],Integer[] topicIds,HttpServletRequest request,HttpServletResponse response) throws JSONException {
 		JSONObject json = new JSONObject();
 		CmsUser user=CmsUtils.getUser(request);
 		Boolean pass = true;
@@ -1123,37 +1144,37 @@ public class ContentAct{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		ResponseUtils.renderText(response, jsonArray.toString());
 	}
-	
+
 	@RequiresPermissions("content_cycle:v_list")
 	@RequestMapping("/content_cycle/v_list.do")
 	public String cycleList(Integer queryTypeId, Boolean queryTopLevel,
-			Boolean queryRecommend, Integer queryOrderBy, Integer cid,
-			Integer pageNo, HttpServletRequest request, ModelMap model) {
+							Boolean queryRecommend, Integer queryOrderBy, Integer cid,
+							Integer pageNo, HttpServletRequest request, ModelMap model) {
 		list(null,ContentStatus.recycle.toString(), queryTypeId, queryTopLevel,
 				queryRecommend, queryOrderBy, cid, pageNo, request, model);
 		return "content/cycle_list";
 	}
-	
+
 	@RequiresPermissions("content_cycle:v_list")
 	@RequestMapping("/content_cycle/getPage.do")
 	public void cycleListGetPage(Integer queryTypeId, Boolean queryTopLevel,
-			Boolean queryRecommend, Integer queryOrderBy, Integer cid,
-			Integer pageNo, HttpServletRequest request,
-			HttpServletResponse response, ModelMap model) {
+								 Boolean queryRecommend, Integer queryOrderBy, Integer cid,
+								 Integer pageNo, HttpServletRequest request,
+								 HttpServletResponse response, ModelMap model) {
 		getPage(null, ContentStatus.recycle.toString(), queryTypeId,
-				queryTopLevel, queryRecommend, queryOrderBy, 
+				queryTopLevel, queryRecommend, queryOrderBy,
 				cid, pageNo, request, response, model);
 	}
 
 	@RequiresPermissions("content_cycle:o_recycle")
 	@RequestMapping("/content_cycle/o_recycle.do")
 	public String cycleRecycle(String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+							   Boolean queryTopLevel, Boolean queryRecommend,
+							   Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
+							   HttpServletRequest request, ModelMap model) {
 		WebErrors errors = validateDelete(ids, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -1176,9 +1197,9 @@ public class ContentAct{
 	@RequiresPermissions("content_cycle:o_delete")
 	@RequestMapping("/content_cycle/o_delete.do")
 	public String cycleDelete(String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
-			HttpServletRequest request, ModelMap model) {
+							  Boolean queryTopLevel, Boolean queryRecommend,
+							  Integer queryOrderBy, Integer[] ids, Integer cid, Integer pageNo,
+							  HttpServletRequest request, ModelMap model) {
 		WebErrors errors = validateDelete(ids, request);
 		if (errors.hasErrors()) {
 			return errors.showErrorPage(model);
@@ -1214,15 +1235,15 @@ public class ContentAct{
 		json.put("tags", tags);
 		ResponseUtils.renderJson(response, json.toString());
 	}
-	
-	
+
+
 	@RequiresPermissions("content:rank_list")
 	@RequestMapping(value = "/content/rank_list.do")
 	public String contentRankList(Integer orderBy,Integer pageNo, HttpServletRequest request,
-			HttpServletResponse response, ModelMap model) {
+								  HttpServletResponse response, ModelMap model) {
 		CmsUser user=CmsUtils.getUser(request);
 		Integer siteId=CmsUtils.getSiteId(request);
-		Pagination p = manager.getPageByRight(Content.CONTENT_QUERY_NOT_SHARE,null, 
+		Pagination p = manager.getPageByRight(Content.CONTENT_QUERY_NOT_SHARE,null,
 				null,user.getId(),0, false,
 				false, ContentStatus.checked, user.getCheckStep(siteId), siteId, null,
 				user.getId(),orderBy, cpn(pageNo), CookieUtils.getPageSize(request));
@@ -1233,7 +1254,7 @@ public class ContentAct{
 		model.addAttribute("site", CmsUtils.getSite(request));
 		return "content/ranklist";
 	}
-	
+
 	@RequiresPermissions("content:o_upload_docs")
 	@RequestMapping("/content/o_upload_docs.do")
 	public String uploadDocs(
@@ -1316,11 +1337,11 @@ public class ContentAct{
 		return "content/import";
 	}
 
-	private void addAttibuteForQuery(ModelMap model, 
-			Integer queryShare,String queryTitle,
-			String queryInputUsername, String queryStatus, Integer queryTypeId,
-			Boolean queryTopLevel, Boolean queryRecommend,
-			Integer queryOrderBy, Integer pageNo) {
+	private void addAttibuteForQuery(ModelMap model,
+									 Integer queryShare,String queryTitle,
+									 String queryInputUsername, String queryStatus, Integer queryTypeId,
+									 Boolean queryTopLevel, Boolean queryRecommend,
+									 Integer queryOrderBy, Integer pageNo) {
 		if (queryShare != null) {
 			model.addAttribute("queryShare", queryShare);
 		}
@@ -1358,7 +1379,7 @@ public class ContentAct{
 		tplList = CoreUtils.tplTrim(tplList, tplPath, tpl);
 		return tplList;
 	}
-	
+
 	private List<String> getTplMobileContent(CmsSite site, CmsModel model, String tpl) {
 		String sol = site.getMobileSolutionPath();
 		String tplPath = site.getTplPath();
@@ -1367,7 +1388,7 @@ public class ContentAct{
 		tplList = CoreUtils.tplTrim(tplList, tplPath, tpl);
 		return tplList;
 	}
-	
+
 	private WebErrors validateTree(String path, HttpServletRequest request) {
 		WebErrors errors = WebErrors.create(request);
 		// if (errors.ifBlank(path, "path", 255)) {
@@ -1405,7 +1426,7 @@ public class ContentAct{
 	}
 
 	private WebErrors validateSave(Content bean, Integer channelId,
-			HttpServletRequest request) {
+								   HttpServletRequest request) {
 		WebErrors errors = WebErrors.create(request);
 		CmsSite site = CmsUtils.getSite(request);
 		bean.setSite(site);
@@ -1515,7 +1536,7 @@ public class ContentAct{
 	}
 
 	private WebErrors validateUpload(MultipartFile file,
-			HttpServletRequest request) {
+									 HttpServletRequest request) {
 		String origName = file.getOriginalFilename();
 		CmsUser user= CmsUtils.getUser(request);
 		String ext = FilenameUtils.getExtension(origName).toLowerCase(Locale.ENGLISH);
@@ -1562,14 +1583,14 @@ public class ContentAct{
 		}
 		return false;
 	}
-	
+
 	private ContentTxt copyContentTxtImg(ContentTxt txt,CmsSite site){
 		if(StringUtils.isNotBlank(txt.getTxt())){
 			txt.setTxt(copyTxtHmtlImg(txt.getTxt(), site));
 		}
 		if(StringUtils.isNotBlank(txt.getTxt1())){
 			txt.setTxt1(copyTxtHmtlImg(txt.getTxt1(), site));
-		}	
+		}
 		if(StringUtils.isNotBlank(txt.getTxt2())){
 			txt.setTxt2(copyTxtHmtlImg(txt.getTxt2(), site));
 		}
@@ -1578,7 +1599,7 @@ public class ContentAct{
 		}
 		return txt;
 	}
-	
+
 	private String copyTxtHmtlImg(String txtHtml,CmsSite site){
 		List<String>imgUrls=ImageUtils.getImageSrc(txtHtml);
 		for(String img:imgUrls){
@@ -1586,16 +1607,16 @@ public class ContentAct{
 		}
 		return txtHtml;
 	}
-	
+
 	private void afterContentStatusChange(Content content,
-			List<Map<String, Object>>list,Short operate){
+										  List<Map<String, Object>>list,Short operate){
 		ContentStatusChangeThread afterThread = new ContentStatusChangeThread(
 				content,operate,
 				manager.getListenerList(),
 				list);
 		afterThread.start();
 	}
-	
+
 	@Autowired
 	private ChannelMng channelMng;
 	@Autowired
@@ -1629,5 +1650,5 @@ public class ContentAct{
 	@Autowired
 	private CmsConfigMng cmsConfigMng;
 	@Autowired
-	private CmsConfigContentChargeMng cmsConfigContentChargeMng; 
+	private CmsConfigContentChargeMng cmsConfigContentChargeMng;
 }

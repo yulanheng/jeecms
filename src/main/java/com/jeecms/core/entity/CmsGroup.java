@@ -1,19 +1,12 @@
 package com.jeecms.core.entity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.jeecms.cms.entity.main.Channel;
 import com.jeecms.common.hibernate4.PriorityComparator;
 import com.jeecms.common.hibernate4.PriorityInterface;
 import com.jeecms.core.entity.base.BaseCmsGroup;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.*;
 
 public class CmsGroup extends BaseCmsGroup implements PriorityInterface {
 	private static final long serialVersionUID = 1L;
@@ -153,7 +146,7 @@ public class CmsGroup extends BaseCmsGroup implements PriorityInterface {
 		Integer allowMaxFile,
 		Boolean needCaptcha,
 		Boolean needCheck,
-		Boolean regDef) {
+		Boolean regDef,Integer parentId) {
 
 		super (
 			id,
@@ -163,7 +156,7 @@ public class CmsGroup extends BaseCmsGroup implements PriorityInterface {
 			allowMaxFile,
 			needCaptcha,
 			needCheck,
-			regDef);
+			regDef,parentId);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */

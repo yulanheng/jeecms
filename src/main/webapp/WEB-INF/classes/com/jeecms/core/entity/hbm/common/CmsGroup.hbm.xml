@@ -13,6 +13,7 @@
 		<property name="needCaptcha" column="need_captcha" type="java.lang.Boolean" not-null="true"/>
 		<property name="needCheck" column="need_check" type="java.lang.Boolean" not-null="true"/>
 		<property name="regDef" column="is_reg_def" type="java.lang.Boolean" not-null="true"/>
+		<property name="parentId" column="pid" type="integer" />
 		<set name="viewChannels" table="jc_chnl_group_view" inverse="true">
 			<cache usage="read-write"/>
 			<key column="group_id"/>

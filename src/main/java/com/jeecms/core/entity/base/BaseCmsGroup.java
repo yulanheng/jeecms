@@ -50,7 +50,7 @@ public abstract class BaseCmsGroup  implements Serializable {
 		Integer allowMaxFile,
 		Boolean needCaptcha,
 		Boolean needCheck,
-		Boolean regDef) {
+		Boolean regDef,Integer parentId) {
 
 		this.setId(id);
 		this.setName(name);
@@ -60,6 +60,7 @@ public abstract class BaseCmsGroup  implements Serializable {
 		this.setNeedCaptcha(needCaptcha);
 		this.setNeedCheck(needCheck);
 		this.setRegDef(regDef);
+		this.setParentId(parentId);
 		initialize();
 	}
 
@@ -81,6 +82,16 @@ public abstract class BaseCmsGroup  implements Serializable {
 	private Boolean needCaptcha;
 	private Boolean needCheck;
 	private Boolean regDef;
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	private Integer parentId;
 
 	// collections
 	private java.util.Set<com.jeecms.cms.entity.main.Channel> viewChannels;
