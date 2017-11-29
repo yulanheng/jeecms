@@ -626,7 +626,7 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 				f.append(" where bean.channel.id in (:channelIds)  ");
 				f.setParamList("channelIds", channelIds);
 			}*/
-			f.append("select  bean from Content bean left join bean.viewGroups as group ");
+			f.append("select  bean from Content bean  join bean.viewGroups as group ");
 			f.append(" join bean.contentExt as ext where 1=1 ");
 			if(viewGroupId!=null){
 				f.append(" and group.id=:viewGroupId");
