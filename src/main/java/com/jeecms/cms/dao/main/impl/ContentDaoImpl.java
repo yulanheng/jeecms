@@ -604,7 +604,7 @@ public class ContentDaoImpl extends HibernateBaseDao<Content, Integer>
 		CmsUser user = CmsThreadVariable.getUser();
 		Integer viewGroupId=null;
 		if(user!=null){
-			Boolean superAdmin=user.getTopRole().getAll();
+			Boolean superAdmin=user.isSuper();
 			if(superAdmin!=null&&superAdmin) {
 
 			}else{
